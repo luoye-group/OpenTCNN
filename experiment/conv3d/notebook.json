@@ -1,0 +1,14 @@
+[
+    "/home/limingbo/projects/cTCNN/experiment/paperwithcode/conv3d/repeat_01-Lenet-organmnist-28",
+    "/home/limingbo/projects/cTCNN/experiment/paperwithcode/conv3d/repeat_01-Lenet-organmnist-64",
+    "/home/limingbo/projects/cTCNN/experiment/paperwithcode/conv3d/repeat_02-Lenet-nodulemnist-28",
+    "/home/limingbo/projects/cTCNN/experiment/paperwithcode/conv3d/repeat_02-Lenet-nodulemnist-64",
+    "/home/limingbo/projects/cTCNN/experiment/paperwithcode/conv3d/repeat_03-Lenet-adrenalmnist-28",
+    "/home/limingbo/projects/cTCNN/experiment/paperwithcode/conv3d/repeat_03-Lenet-adrenalmnist-64",
+    "/home/limingbo/projects/cTCNN/experiment/paperwithcode/conv3d/repeat_04-Lenet-fracturemnist-28",
+    "/home/limingbo/projects/cTCNN/experiment/paperwithcode/conv3d/repeat_04-Lenet-fracturemnist-64",
+    "/home/limingbo/projects/cTCNN/experiment/paperwithcode/conv3d/repeat_05-Lenet-vesslmnist-28",
+    "/home/limingbo/projects/cTCNN/experiment/paperwithcode/conv3d/repeat_05-Lenet-vesslmnist-64",
+    "/home/limingbo/projects/cTCNN/experiment/paperwithcode/conv3d/repeat_06-Lenet-synapsemnist-28",
+    "/home/limingbo/projects/cTCNN/experiment/paperwithcode/conv3d/repeat_06-Lenet-synapsemnist-64"
+]

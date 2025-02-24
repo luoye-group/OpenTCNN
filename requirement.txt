@@ -1,0 +1,6 @@
+einops
+py-cpuinfo
+matplotlib
+tqdm
+scikit-learn
+pandas
