@@ -92,3 +92,31 @@ Contributions to OpenTCNN are welcome!
 ## License
 
 This project is licensed under the [Apache License 2.0](LICENSE).
+
+## Citing OpenTCNN
+
+If you use OpenTCNN in your research, please consider citing our paper or the OpenTCNN project:
+- Paper:
+```bibtex
+@misc{li2025compoundparallelmodestropical,
+    title={Compound and Parallel Modes of Tropical Convolutional Neural Networks}, 
+    author={Mingbo Li and Liying Liu and Ye Luo},
+    year={2025},
+    eprint={2504.06881},
+    archivePrefix={arXiv},
+    primaryClass={cs.CV},
+    url={https://arxiv.org/abs/2504.06881}, 
+}
+```
+- OpenTCNN:
+```bibtex
+@software{opentcnn2025,
+   author = {{Mingbo Li, Liying Liu and Ye Luo}},
+   month = {4},
+   title = {{OpenTCNN}},
+   url = {https://github.com/luoye-group/OpenTCNN},
+   version = {1.0},
+   year = {2025}
+}
+```
+

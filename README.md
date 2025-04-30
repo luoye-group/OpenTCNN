@@ -93,3 +93,30 @@ python -m unittest discover -s tests
 ## 许可证
 
 本项目采用 [Apache License 2.0](LICENSE) 许可证。
+
+## 引用 OpenTCNN
+如果您在研究中使用了 OpenTCNN，请考虑引用OpenTCNN 或者 我们的论文：
+- 论文：
+```bibtex
+@misc{li2025compoundparallelmodestropical,
+      title={Compound and Parallel Modes of Tropical Convolutional Neural Networks}, 
+      author={Mingbo Li and Liying Liu and Ye Luo},
+      year={2025},
+      eprint={2504.06881},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2504.06881}, 
+}
+```
+- OpenTCNN：
+```bibtex
+@software{opentcnn2025,
+   author = {{Mingbo Li, Liying Liu and Ye Luo}},
+   month = {4},
+   title = {{OpenTCNN}},
+   url = {https://github.com/luoye-group/OpenTCNN},
+   version = {1.0},
+   year = {2025}
+}
+```
+
