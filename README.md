@@ -5,6 +5,8 @@
 [![Endlish](https://img.shields.io/badge/README-English-blue)](README_English.md)
 ![GitHub repo file or directory count](https://img.shields.io/github/repo-size/luoye-group/OpenTCNN)
 
+<div align=center><img src="./logo.png" width="300" ></div>
+
 
 OpenTCNN 是一个用于构建、训练以及应用热带卷积神经网络 (Tropical CNN) 的开源项目，也是论文 [Compound and Parallel Modes of Tropical Convolutional Neural Networks](https://arxiv.org/abs/2504.06881) 的实现。该项目通过模块化设计和高性能实现，支持多种卷积层类型，并提供丰富的实验案例和实用的工具，便于用户快速上手和扩展。
 
