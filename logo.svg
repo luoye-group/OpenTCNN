@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <!-- Outer Circle -->
+  <circle cx="100" cy="100" r="95" fill="#e3f2fd" stroke="#0288d1" stroke-width="5"/>
+
+  <!-- Tropical Algebra Symbols -->
+  <text x="15" y="28" font-family="Arial" font-size="18" fill="#0277bd" font-weight="bold">⊕</text>
+  <text x="165" y="28" font-family="Arial" font-size="18" fill="#0277bd" font-weight="bold">⊗</text>
+  <text x="15" y="190" font-family="Arial" font-size="16" fill="#0277bd" font-weight="bold">Min</text>
+  <text x="165" y="190" font-family="Arial" font-size="16" fill="#0277bd" font-weight="bold">Max</text>
+
+  <!-- Neural Network Layers -->
+  <!-- Input Layer -->
+  <circle cx="40" cy="50" r="8" fill="#01579b"/>
+  <circle cx="40" cy="100" r="8" fill="#01579b"/>
+  <circle cx="40" cy="150" r="8" fill="#01579b"/>
+
+  <!-- Hidden Layer -->
+  <circle cx="100" cy="50" r="8" fill="#0288d1"/>
+  <circle cx="100" cy="100" r="8" fill="#0288d1"/>
+  <circle cx="100" cy="150" r="8" fill="#0288d1"/>
+
+  <!-- Output Layer -->
+  <circle cx="160" cy="50" r="8" fill="#01579b"/>
+  <circle cx="160" cy="100" r="8" fill="#01579b"/>
+  <circle cx="160" cy="150" r="8" fill="#01579b"/>
+
+  <!-- Connections -->
+  <!-- Input to Hidden -->
+  <line x1="40" y1="50" x2="100" y2="50" stroke="#01579b" stroke-width="2"/>
+  <line x1="40" y1="100" x2="100" y2="50" stroke="#01579b" stroke-width="2"/>
+  <line x1="40" y1="150" x2="100" y2="50" stroke="#01579b" stroke-width="2"/>
+  <line x1="40" y1="50" x2="100" y2="100" stroke="#01579b" stroke-width="2"/>
+  <line x1="40" y1="100" x2="100" y2="100" stroke="#01579b" stroke-width="2"/>
+  <line x1="40" y1="150" x2="100" y2="100" stroke="#01579b" stroke-width="2"/>
+  <line x1="40" y1="50" x2="100" y2="150" stroke="#01579b" stroke-width="2"/>
+  <line x1="40" y1="100" x2="100" y2="150" stroke="#01579b" stroke-width="2"/>
+  <line x1="40" y1="150" x2="100" y2="150" stroke="#01579b" stroke-width="2"/>
+
+  <!-- Hidden to Output -->
+  <line x1="100" y1="50" x2="160" y2="50" stroke="#01579b" stroke-width="2"/>
+  <line x1="100" y1="100" x2="160" y2="50" stroke="#01579b" stroke-width="2"/>
+  <line x1="100" y1="150" x2="160" y2="50" stroke="#01579b" stroke-width="2"/>
+  <line x1="100" y1="50" x2="160" y2="100" stroke="#01579b" stroke-width="2"/>
+  <line x1="100" y1="100" x2="160" y2="100" stroke="#01579b" stroke-width="2"/>
+  <line x1="100" y1="150" x2="160" y2="100" stroke="#01579b" stroke-width="2"/>
+  <line x1="100" y1="50" x2="160" y2="150" stroke="#01579b" stroke-width="2"/>
+  <line x1="100" y1="100" x2="160" y2="150" stroke="#01579b" stroke-width="2"/>
+  <line x1="100" y1="150" x2="160" y2="150" stroke="#01579b" stroke-width="2"/>
+
+  <!-- Central Highlight and TCNN -->
+  <circle cx="100" cy="100" r="25" fill="#b3e5fc" stroke="#0288d1" stroke-width="3"/>
+  <text x="78" y="106" font-family="Arial" font-size="15" fill="#01579b" font-weight="bold">TCNN</text>
+</svg>
