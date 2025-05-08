@@ -5,6 +5,9 @@
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 ![GitHub repo file or directory count](https://img.shields.io/github/repo-size/luoye-group/OpenTCNN)
 
+<div align=center><img src="./logo.png" width="300" ></div>
+
+
 OpenTCNN is an open source project for building, training, and applying Tropical Convolutional Neural Networks (Tropical CNN). It is also the implementation of the paper [Compound and Parallel Modes of Tropical Convolutional Neural Networks](https://arxiv.org/abs/2504.06881). The project features a modular design and high-performance implementation that supports multiple types of convolutional layers, and provides abundant experimental cases and practical tools to facilitate rapid adoption and extension.
 
 ## Key Features
