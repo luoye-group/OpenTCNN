@@ -1,9 +1,20 @@
 # OpenTCNN
 
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Chinese](https://img.shields.io/badge/README-中文-blue)](README.md)
 [![Endlish](https://img.shields.io/badge/README-English-blue)](README_English.md)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 ![GitHub repo file or directory count](https://img.shields.io/github/repo-size/luoye-group/OpenTCNN)
+
+
+![GitHub stars](https://img.shields.io/github/stars/luoye-group/OpenTCNN?style=social)
+![GitHub forks](https://img.shields.io/github/forks/luoye-group/OpenTCNN?style=social)
+![GitHub watchers](https://img.shields.io/github/watchers/luoye-group/OpenTCNN?style=social)
+
+
+
+![GitHub language count](https://img.shields.io/github/languages/count/luoye-group/OpenTCNN)
+![GitHub top language](https://img.shields.io/github/languages/top/luoye-group/OpenTCNN)
+![GitHub last commit](https://img.shields.io/github/last-commit/luoye-group/OpenTCNN?color=red)
 
 <div align=center><img src="./logo.png" width="300" ></div>
 
