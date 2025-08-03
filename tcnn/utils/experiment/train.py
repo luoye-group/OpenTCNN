@@ -385,7 +385,8 @@ def eval_model(
         accuracy = eval_model(model, test_dataloader)
     """
     model.eval()
-    model = torch.nn.DataParallel(model).to(device)
+    if device.type == "cuda" and torch.cuda.device_count() > 1:
+        model = torch.nn.DataParallel(model)
     correct = 0
     total_loss = 0
     all_preds = []
