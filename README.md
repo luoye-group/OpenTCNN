@@ -15,6 +15,7 @@
 ![GitHub language count](https://img.shields.io/github/languages/count/luoye-group/OpenTCNN)
 ![GitHub top language](https://img.shields.io/github/languages/top/luoye-group/OpenTCNN)
 ![GitHub last commit](https://img.shields.io/github/last-commit/luoye-group/OpenTCNN?color=red)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/luoye-group/OpenTCNN)
 
 
 
