@@ -5,7 +5,7 @@ from torch import Tensor
 from torch.nn import functional as F
 
 from .. import functional as function
-from ..common_types import _size_1_t
+from ..common_types import _size_2_t
 from ..utils import _pair
 from ._parallel import _Parallel
 
@@ -15,10 +15,10 @@ class ConstantParallelMinMaxPlusSumConv2d(_Parallel):
         self,
         in_channels: int,
         out_channels: int,
-        kernel_size: _size_1_t,
-        stride: _size_1_t = 1,
-        padding: Union[str, _size_1_t] = 0,
-        dilation: _size_1_t = 1,
+        kernel_size: _size_2_t,
+        stride: _size_2_t = 1,
+        padding: Union[str, _size_2_t] = 0,
+        dilation: _size_2_t = 1,
         groups: int = 1,
         bias: bool = True,
         padding_mode: str = "zeros",  # TODO: refine this type
