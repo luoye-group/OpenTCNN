@@ -56,6 +56,8 @@ OpenTCNN 是一个用于构建、训练以及应用热带卷积神经网络 (Tro
 ```python
 import torch.nn as nn
 import tcnn.layers as tlayers
+# 如果需要使用GPU加速，可以使用基于TileLang的TCNN版本
+# import tl_tcnn as tlayers 
 
 # 传统的卷积层定义
 conv = nn.Conv2d(3, 6, kernel_size=5, padding=2)

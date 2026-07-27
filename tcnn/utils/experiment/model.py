@@ -101,11 +101,17 @@ def count_operations_in_model(model, inputs):
                 * output_channels
                 * output_elements
             )
+            # add_count += (
+            #     (input_channels - 1)
+            #     * output_channels
+            #     * output_elements
+            #     * (num_elements_per_kernel - 1)
+            # )
             add_count += (
-                (input_channels - 1)
+                (num_elements_per_kernel * input_channels - 1)
                 * output_channels
                 * output_elements
-                * (num_elements_per_kernel - 1)
+                # * (num_elements_per_kernel - 1)
             )
             if module.bias is not None:
                 add_count += output_channels * output_elements

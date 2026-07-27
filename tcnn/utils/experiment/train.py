@@ -1,6 +1,7 @@
 import glob
 import os
 import time
+import copy
 from math import e
 from unittest import result
 
@@ -8,6 +9,7 @@ import cpuinfo
 import numpy as np
 import torch
 import torch.nn.functional as F
+from torch.utils.data.dataloader import default_collate
 from matplotlib import pyplot as plt
 from sklearn.metrics import (
     classification_report,
@@ -22,6 +24,34 @@ from tqdm import tqdm
 from tcnn.utils.experiment.model import count_parameters
 
 
+def _iter_compile_batches(dataloader):
+    dataset = getattr(dataloader, "dataset", None)
+    batch_sampler = getattr(dataloader, "batch_sampler", None)
+    if dataset is None or batch_sampler is None:
+        return None
+    if not hasattr(dataset, "__getitem__"):
+        return None
+
+    batch_iter = iter(batch_sampler)
+    try:
+        first_indices = next(batch_iter)
+    except StopIteration:
+        return []
+
+    last_indices = None
+    for batch_indices in batch_iter:
+        last_indices = batch_indices
+
+    batches = [first_indices]
+    if last_indices is not None and list(last_indices) != list(first_indices):
+        batches.append(last_indices)
+
+    collate_fn = dataloader.collate_fn or default_collate
+    for indices in batches:
+        samples = [dataset[i] for i in indices]
+        yield collate_fn(samples)
+
+
 def train_one_epoch(
     model,
     train_loader,
@@ -29,6 +59,10 @@ def train_one_epoch(
     optimizer,
     device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
     task="multiclass",
+    show_progress: bool = False,
+    progress_desc: str = "train",
+    compile_mode=False,
+    log_interval: int = 10,
 ):
     """
     Trains the model for one epoch.
@@ -57,7 +91,33 @@ def train_one_epoch(
     model.train()
     total_loss = 0
     correct = 0
-    for batch_idx, (data, target) in enumerate(train_loader):
+    if compile_mode:
+        compile_batches = _iter_compile_batches(train_loader)
+        if compile_batches is not None:
+            compile_batches = list(compile_batches)
+            data_iter = enumerate(compile_batches)
+            num_batch = len(compile_batches)
+        else:
+            data_iter = enumerate(train_loader)
+            num_batch = len(train_loader)
+    else:
+        data_iter = enumerate(train_loader)
+        num_batch = len(train_loader)
+    if show_progress:
+        data_iter = tqdm(
+            data_iter,
+            total=num_batch,
+            desc=progress_desc,
+            leave=False,
+            mininterval=0.5,
+        )
+
+    for batch_idx, (data, target) in data_iter:
+        if compile_mode:
+            if batch_idx == 0:
+                print("Compiling the model for the first batch...")
+            elif batch_idx == num_batch - 1:
+                print("Compiling last batch...")
         data = data.to(device)
         target = target.to(device)
 
@@ -68,11 +128,20 @@ def train_one_epoch(
             pred = get_likely_index(output)
         elif task == "binary":
             pred = torch.round(output)
-        correct += number_of_correct(pred, target)
+        batch_correct = number_of_correct(pred, target)
+        correct += batch_correct
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
         total_loss += loss.item()
+        if log_interval and ((batch_idx + 1) % log_interval == 0 or batch_idx == num_batch - 1):
+            batch_acc = 100.0 * batch_correct / max(1, len(target))
+            if show_progress and hasattr(data_iter, "set_postfix"):
+                data_iter.set_postfix(loss=f"{loss.item():.4f}", acc=f"{batch_acc:.2f}%")
+            else:
+                print(
+                    f"{progress_desc} iter {batch_idx + 1}/{num_batch}: loss={loss.item():.4f}, acc={batch_acc:.2f}%"
+                )
     accuracy = 100.0 * correct / len(train_loader.dataset)
 
     return total_loss, accuracy
@@ -126,6 +195,10 @@ def test_one_epoch(
     crtiterion,
     device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
     task="multiclass",
+    show_progress: bool = False,
+    progress_desc: str = "val",
+    compile_mode=False,
+    log_interval: int = 10,
 ):
     """
     Tests the model on the test data.
@@ -150,7 +223,33 @@ def test_one_epoch(
     model.eval()
     correct = 0
     total_loss = 0
-    for data, target in dataloader:
+    if compile_mode:
+        compile_batches = _iter_compile_batches(dataloader)
+        if compile_batches is not None:
+            compile_batches = list(compile_batches)
+            data_iter = enumerate(compile_batches)
+            num_batch = len(compile_batches)
+        else:
+            data_iter = enumerate(dataloader)
+            num_batch = len(dataloader)
+    else:
+        data_iter = enumerate(dataloader)
+        num_batch = len(dataloader)
+    if show_progress:
+        data_iter = tqdm(
+            data_iter,
+            total=num_batch,
+            desc=progress_desc,
+            leave=False,
+            mininterval=0.5,
+        )
+
+    for batch_idx, (data, target) in data_iter:
+        if compile_mode:
+            if batch_idx == 0:
+                print("Compiling the model for the first batch...")
+            elif batch_idx == num_batch - 1:
+                print("Compiling last batch...")
         data = data.to(device)
         target = target.to(device)
 
@@ -161,9 +260,18 @@ def test_one_epoch(
             pred = get_likely_index(output)
         elif task == "binary":
             pred = torch.round(output)
-        correct += number_of_correct(pred, target)
+        batch_correct = number_of_correct(pred, target)
+        correct += batch_correct
 
         total_loss += loss.item()
+        if log_interval and ((batch_idx + 1) % log_interval == 0 or batch_idx == num_batch - 1):
+            batch_acc = 100.0 * batch_correct / max(1, len(target))
+            if show_progress and hasattr(data_iter, "set_postfix"):
+                data_iter.set_postfix(loss=f"{loss.item():.4f}", acc=f"{batch_acc:.2f}%")
+            else:
+                print(
+                    f"{progress_desc} iter {batch_idx + 1}/{num_batch}: loss={loss.item():.4f}, acc={batch_acc:.2f}%"
+                )
 
     accuracy = 100.0 * correct / len(dataloader.dataset)
     return accuracy, total_loss
@@ -184,6 +292,10 @@ def train_and_test_model(
     save_checkpoint_interval=10,
     checkpoint_save_dir="./checkpoints/",
     task="multiclass",
+    compile_mode=False,
+    log_interval: int = 10,
+    load_optimizer_from_checkpoint=True,
+    val_dataloader=None,
 ):
     """
     Trains and tests the given model for a specified number of epochs.
@@ -203,6 +315,7 @@ def train_and_test_model(
         checkpoint_path (str, optional): The path to save the model checkpoint. Defaults to None.
         save_checkpoint_interval (int, optional): The interval at which to save the model checkpoint. Defaults to 10.
         checkpoint_save_dir (str, optional): The directory to save the model checkpoint. Defaults to './checkpoints/'.
+        compile_mode (bool, optional): Whether to compile the model. Defaults to False.
 
     Returns:
         dict: A dictionary containing the training and testing loss and accuracy.
@@ -228,6 +341,8 @@ def train_and_test_model(
         "test_loss": [],
         "lr": [],
     }
+    if compile_mode:
+        model = copy.deepcopy(model)
     if save_checkpoint:
         os.makedirs(checkpoint_save_dir, exist_ok=True)
         print(f"Checkpoints will be saved in {checkpoint_save_dir}")
@@ -240,6 +355,8 @@ def train_and_test_model(
     best_accuracy = 0
     if torch.cuda.device_count() >= 1:
         model = torch.nn.DataParallel(model).to(device)
+    else:
+        model = model.to(device)
 
     print(f"Training on {device} and {torch.cuda.device_count()} GPUs:")
     if torch.cuda.is_available():
@@ -255,7 +372,8 @@ def train_and_test_model(
     if save_checkpoint and checkpoint_path is not None:
         checkpoint = torch.load(checkpoint_path)
         model.load_state_dict(checkpoint["model_state_dict"])
-        optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
+        if load_optimizer_from_checkpoint:
+            optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
         start_epochs = checkpoint["epoch"] + 1
         history["train_loss"] = checkpoint["train_loss"]
         history["test_loss"] = checkpoint["test_loss"]
@@ -280,16 +398,46 @@ def train_and_test_model(
             optimizer,
             device=device,
             task=task,
+            show_progress=output_logs,
+            progress_desc=f"{'COMPILING: ' if compile_mode else ''}train e{epoch}",
+            compile_mode=compile_mode,
+            log_interval=log_interval,
         )
+        
+        if val_dataloader is not None:
+            val_accuracy, val_loss = test_one_epoch(
+                model,
+                epoch,
+                val_dataloader,
+                criterion,
+                device=device,
+                task=task,
+                show_progress=output_logs,
+                progress_desc=f"{'COMPILING: ' if compile_mode else ''}val e{epoch}",
+                compile_mode=compile_mode,
+                log_interval=log_interval,
+            )
 
         test_accuracy, test_loss = test_one_epoch(
-            model, epoch, test_dataloader, criterion, device=device, task=task
+            model,
+            epoch,
+            test_dataloader,
+            criterion,
+            device=device,
+            task=task,
+            show_progress=output_logs,
+            progress_desc=f"{'COMPILING: ' if compile_mode else ''}val e{epoch}",
+            compile_mode=compile_mode,
+            log_interval=log_interval,
         )
 
         "scheduler"
         if scheduler is not None:
             if scheduler_sign == "val_acc":
-                scheduler.step(test_accuracy)
+                if val_dataloader is not None:
+                    scheduler.step(val_accuracy)
+                else:
+                    scheduler.step(test_accuracy)
             else:
                 scheduler.step()
 
@@ -366,6 +514,7 @@ def eval_model(
     device=torch.device("cuda" if torch.cuda.is_available() else "cpu"),
     stage="Test",
     plot=True,
+    compile_mode=False,
 ):
     """
     Evaluates the model on the test data.
@@ -392,27 +541,47 @@ def eval_model(
     all_preds = []
     all_preds_probs = []
     all_targets = []
-    for data, target in test_dataloader:
-        data = data.to(device)
-        target = target.to(device)
+    if compile_mode:
+        compile_batches = _iter_compile_batches(test_dataloader)
+        if compile_batches is not None:
+            compile_batches = list(compile_batches)
+            data_iter = enumerate(compile_batches)
+            num_batch = len(compile_batches)
+        else:
+            data_iter = enumerate(test_dataloader)
+            num_batch = len(test_dataloader)
+    else:
+        data_iter = enumerate(test_dataloader)
+        num_batch = len(test_dataloader)
 
-        output = model(data)
-        loss = criterion(output, target)
-        total_loss += loss.item()
+    # Disable gradient computation for evaluation to make inference timing fair
+    with torch.no_grad():
+        for batch_idx, (data, target) in data_iter:
+            if compile_mode:
+                if batch_idx == 0:
+                    print("Compiling the model for the first batch...")
+                elif batch_idx == num_batch - 1:
+                    print("Compiling last batch...")
+            data = data.to(device)
+            target = target.to(device)
 
-        if task == "multiclass":
-            pred = get_likely_index(output)
-        elif task == "binary":
-            pred = torch.round(output)
-        correct += number_of_correct(pred, target)
+            output = model(data)
+            loss = criterion(output, target)
+            total_loss += loss.item()
 
-        if task == "multiclass":
-            all_preds_probs.extend(F.softmax(output, dim=1).cpu().detach().numpy())
-        elif task == "binary":
-            all_preds_probs.extend(output.cpu().detach().numpy())
+            if task == "multiclass":
+                pred = get_likely_index(output)
+            elif task == "binary":
+                pred = torch.round(output)
+            correct += number_of_correct(pred, target)
 
-        all_preds.extend(pred.cpu().detach().numpy())
-        all_targets.extend(target.cpu().detach().numpy())
+            if task == "multiclass":
+                all_preds_probs.extend(F.softmax(output, dim=1).cpu().detach().numpy())
+            elif task == "binary":
+                all_preds_probs.extend(output.cpu().detach().numpy())
+
+            all_preds.extend(pred.cpu().detach().numpy())
+            all_targets.extend(target.cpu().detach().numpy())
 
     accuracy = 100.0 * correct / len(test_dataloader.dataset)
     print(

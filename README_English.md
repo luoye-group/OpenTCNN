@@ -53,6 +53,8 @@ The following example demonstrates how to replace traditional convolutional laye
 ```python
 import torch.nn as nn
 import tcnn.layers as tlayers
+# If you need GPU acceleration, you can use the TCNN version based on TileLang.
+# import tl_tcnn as tlayers 
 
 # Traditional convolutional layer
 conv = nn.Conv2d(3, 6, kernel_size=5, padding=2)
