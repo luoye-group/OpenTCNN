@@ -118,7 +118,7 @@ python -m unittest discover -s tests
 ```bibtex
 @misc{li2025compoundparallelmodestropical,
       title={Compound and Parallel Modes of Tropical Convolutional Neural Networks}, 
-      author={Mingbo Li and Liying Liu and Ye Luo},
+      author={Mingbo Li and Liying Liu and Charles Wiranto and Ye Luo},
       year={2025},
       eprint={2504.06881},
       archivePrefix={arXiv},
@@ -129,7 +129,7 @@ python -m unittest discover -s tests
 - OpenTCNN：
 ```bibtex
 @software{opentcnn2025,
-   author = {{Mingbo Li, Liying Liu and Ye Luo}},
+   author = {{Mingbo Li, Liying Liu and Charles Wiranto and Ye Luo}},
    month = {4},
    title = {{OpenTCNN}},
    url = {https://github.com/luoye-group/OpenTCNN},
